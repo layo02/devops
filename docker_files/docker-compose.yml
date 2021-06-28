@@ -1,0 +1,21 @@
+version: "3.4"
+
+services:
+  api:
+    image: mms2-api:latest
+    ports:
+      - 80
+      - 443
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${KESTREL_PASSWORD}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=${KESTREL_CERT_PATH}
+    volumes:
+      - ~/.aspnet/https:/https:ro
+  
+  ui:
+    image: mms2-ui:latest
+    ports:
+      - 3000
+
