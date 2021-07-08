@@ -1,11 +1,11 @@
-version: "3.4"
+version: '3.8'
 
 services:
-  api:
-    image: gitlab.accessheritage.com:5050/mms2/mms-backend/mms-api:latest
-    volumes:
-      - ~/.aspnet/https:/https:ro
+  mms-api:
+    image: ${REGISTRY}/mms2/mms-backend/mms-api:${TAG:-latest}
   
-  ui:
-    image: gitlab.accessheritage.com:5050/mms2/mms-frontend/mms-ui:latest
+  mms-ui:
+    image: ${REGISTRY}/mms2/mms-frontend/mms-ui:${TAG:-latest}
+    depends_on:
+        - mms-api
 
