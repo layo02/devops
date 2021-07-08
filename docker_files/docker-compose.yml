@@ -2,10 +2,10 @@ version: '3.8'
 
 services:
   mms-api:
-    image: ${REGISTRY}/mms2/mms-backend/mms-api:${TAG:-latest}
+    image: ${REGISTRY}/mms2/mms-backend/mms-api:${API_TAG:-latest}
   
   mms-ui:
-    image: ${REGISTRY}/mms2/mms-frontend/mms-ui:${TAG:-latest}
+    image: ${REGISTRY}/mms2/mms-frontend/mms-ui:${UI_TAG:-latest}
     depends_on:
         - mms-api
 
