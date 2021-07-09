@@ -6,10 +6,10 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:80
     ports:
-      - "80:5001"
+      - "5001:80"
 
   mms-ui:
     environment:
       - REACT_APP_BASE_URL=http://mms-api:80
     ports:
-      - "3000:3001"
+      - "3001:3000"
