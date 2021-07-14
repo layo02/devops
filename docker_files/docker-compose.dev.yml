@@ -4,10 +4,12 @@ services:
   mms-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443
+      - ASPNETCORE_URLS=http://+:80
     ports:
       - "5001:80"
 
   mms-ui:
     ports:
       - "3001:3000"
+    environment:
+      - API_BASE_URL=http://${APP_SERVER_IP}:5001
