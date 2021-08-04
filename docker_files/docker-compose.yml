@@ -2,10 +2,18 @@ version: '3.4'
 
 services:
   mms-api:
-    image: ${REGISTRY}/mms2/mms-backend/mms-api:${API_TAG:-latest}
+    image: gitlab.accessheritage.com:5050/mms2/mms-backend/mms-api:${API_TAG:-latest}
+    ports:
+      - "${API_PORT}:443"   
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ENV_NAME}
+      - ASPNETCORE_URLS=http://+:443    
   
   mms-ui:
-    image: ${REGISTRY}/mms2/mms-frontend/mms-ui:${UI_TAG:-latest}
+    image: gitlab.accessheritage.com:5050/mms2/mms-frontend/mms-ui:${UI_TAG:-latest}
+    ports:
+      - "${UI_PORT}:3000"    
+    environment:
+      - API_BASE_URL=https://mms2-api-${ENV_NAME}.accessheritage.com      
     depends_on:
         - mms-api
-
