@@ -1,0 +1,6 @@
+version: '3.4'
+
+services:
+  mms-ui:
+    environment:
+      - API_BASE_URL=https://mms2-api.accessheritage.com            
