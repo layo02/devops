@@ -4,10 +4,10 @@ services:
   mms-api:
     image: gitlab.accessheritage.com:5050/mms2/mms-backend/mms-api:${API_TAG:-latest}
     ports:
-      - "${API_PORT}:443"   
+      - "${API_PORT}:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENV_NAME}
-      - ASPNETCORE_URLS=http://+:443    
+      - ASPNETCORE_URLS=http://+:80
   
   mms-ui:
     image: gitlab.accessheritage.com:5050/mms2/mms-frontend/mms-ui:${UI_TAG:-latest}
