@@ -8,6 +8,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENV_NAME}
       - ASPNETCORE_URLS=http://+:80
+    volume:
+      - type: bind
+        source: /home/teamcity/.gnupg
+        target: /root/.gnupg
+
   
   mms-ui:
     image: gitlab.accessheritage.com:5050/mms2/mms-frontend/mms-ui:${UI_TAG:-latest}
