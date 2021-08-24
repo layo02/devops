@@ -8,7 +8,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENV_NAME}
       - ASPNETCORE_URLS=http://+:80
-    volume:
+    volumes:
       - type: bind
         source: /home/teamcity/.gnupg
         target: /root/.gnupg
