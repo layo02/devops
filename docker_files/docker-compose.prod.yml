@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 
 services:
   mms-api:
@@ -8,4 +8,6 @@ services:
         max_attempts: 5
   mms-ui:
     environment:
-      - API_BASE_URL=https://mms2-api.accessheritage.com            
+      - API_BASE_URL=https://mms2-api.accessheritage.com
+      - APP_OIDC_TENANTID=${OIDC_TENANTID}
+      - APP_OIDC_CLIENTID=${OIDC_CLIENTID}
