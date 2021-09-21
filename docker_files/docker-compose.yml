@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 
 services:
   mms-api:
@@ -13,12 +13,13 @@ services:
         source: /home/teamcity/.gnupg
         target: /root/.gnupg
 
-  
   mms-ui:
     image: gitlab.accessheritage.com:5050/mms2/mms-frontend/mms-ui:${UI_TAG:-latest}
     ports:
-      - "${UI_PORT}:3000"    
+      - "${UI_PORT}:3000"
     environment:
-      - API_BASE_URL=https://mms2-api-${ENV_NAME}.accessheritage.com      
+      - API_BASE_URL=https://mms2-api-${ENV_NAME}.accessheritage.com
+      - APP_OIDC_TENANTID=${OIDC_TENANTID}
+      - APP_OIDC_CLIENTID=${OIDC_CLIENTID}
     depends_on:
-        - mms-api
+      - mms-api
