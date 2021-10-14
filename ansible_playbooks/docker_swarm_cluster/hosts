@@ -1,0 +1,24 @@
+mms2-dev-swm-mgr1 ansible_ssh_port=22 ansible_ssh_user=user_name
+mms2-dev-swm-mgr2 ansible_ssh_port=22 ansible_ssh_user=user_name
+mms2-dev-swm-mgr3 ansible_ssh_port=22 ansible_ssh_user=user_name
+mms2-dev-swm-wkr1 ansible_ssh_port=22 ansible_ssh_user=user_name
+mms2-dev-swm-wkr2 ansible_ssh_port=22 ansible_ssh_user=user_name
+
+[docker_engine]
+mms2-dev-swm-mgr1
+mms2-dev-swm-mgr2
+mms2-dev-swm-mgr3
+mms2-dev-swm-wkr1
+mms2-dev-swm-wkr2
+
+[docker_swarm_manager]
+mms2-dev-swm-mgr1 swarm_labels='["deploy", "leader"]'
+mms2-dev-swm-mgr2 swarm_labels=deploy
+mms2-dev-swm-mgr3 swarm_labels=deploy
+
+[docker_swarm_worker]
+mms2-dev-swm-wkr1
+mms2-dev-swm-wkr2
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
