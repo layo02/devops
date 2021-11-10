@@ -1,5 +1,3 @@
-version: '3.4'
-
 services:
   mms-api:
     image: gitlab.accessheritage.com:5050/mms2/mms-backend/mms-api:${API_TAG:-latest}
@@ -12,26 +10,45 @@ services:
       - type: bind
         source: /home/teamcity/.gnupg
         target: /root/.gnupg
+
     deploy:
-      replicas: 2
-      update_config:
-        parallelism: 2
-        delay: 10s
+      placement:
+        constraints: [node.role == worker]
+      replicas: 3
       restart_policy:
-        condition: on-failure
-  
+        max_attempts: 3
+        condition: on-failure       
+      update_config:
+        parallelism: 1
+        delay: 10s
+    networks: 
+      - mmsnet
+
   mms-ui:
     image: gitlab.accessheritage.com:5050/mms2/mms-frontend/mms-ui:${UI_TAG:-latest}
     ports:
-      - "${UI_PORT}:3000"    
+      - "${UI_PORT}:3000"
     environment:
-      - API_BASE_URL=https://mms2-api-${ENV_NAME}.accessheritage.com      
+      - API_BASE_URL=https://mms2-api-${ENV_NAME}.accessheritage.com
+      - APP_OIDC_TENANTID=${OIDC_TENANTID}
+      - APP_OIDC_CLIENTID=${OIDC_CLIENTID}
     depends_on:
-        - mms-api
+      - mms-api
+
     deploy:
-      replicas: 2
-      update_config:
-        parallelism: 2
-        delay: 10s
+      placement:
+        constraints: [node.role == worker]
+      replicas: 3
       restart_policy:
-        condition: on-failure
+        max_attempts: 3
+        condition: on-failure       
+      update_config:
+        parallelism: 1 
+        delay: 10s 
+    networks: 
+      - mmsnet 
+
+networks:
+  mmsnet:
+    driver: overlay
+
