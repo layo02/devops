@@ -1,3 +1,5 @@
+version: '3.2' 
+
 services:
   mms-api:
     image: gitlab.accessheritage.com:5050/mms2/mms-backend/mms-api:${API_TAG:-latest}
