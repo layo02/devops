@@ -4,9 +4,9 @@ services:
   mms-api:
     image: gitlab.accessheritage.com:5050/mms2/mms-backend/mms-api:${API_TAG:-latest}
     ports:
-      - "${API_PORT}:80"
+      - "5003:80"
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ENV_NAME}
+      - ASPNETCORE_ENVIRONMENT=STG
       - ASPNETCORE_URLS=http://+:80
     volumes:
       - type: bind
@@ -16,7 +16,7 @@ services:
     deploy:
       placement:
         constraints: [node.role == worker]
-      replicas: 3
+      replicas:1
       restart_policy:
         max_attempts: 3
         condition: on-failure       
@@ -24,23 +24,23 @@ services:
         parallelism: 1
         delay: 10s
     networks: 
-      - mmsnet
+      - mmsnet-stg
 
   mms-ui:
     image: gitlab.accessheritage.com:5050/mms2/mms-frontend/mms-ui:${UI_TAG:-latest}
     ports:
-      - "${UI_PORT}:3000"
+      - "3003:3000"
     environment:
-      - API_BASE_URL=https://mms2-api-${ENV_NAME}.accessheritage.com
-      - APP_OIDC_TENANTID=${OIDC_TENANTID}
-      - APP_OIDC_CLIENTID=${OIDC_CLIENTID}
+      - API_BASE_URL=https://mms2-api-stg.accessheritage.com
+      - APP_OIDC_TENANTID=1c52729b-e37a-46f3-9b7a-94d0ce8eb632
+      - APP_OIDC_CLIENTID=fbd508fb-6163-45a0-ae97-12c15be99b0b
     depends_on:
       - mms-api
 
     deploy:
       placement:
         constraints: [node.role == worker]
-      replicas: 3
+      replicas:1
       restart_policy:
         max_attempts: 3
         condition: on-failure       
@@ -48,9 +48,9 @@ services:
         parallelism: 1 
         delay: 10s 
     networks: 
-      - mmsnet 
+      - mmsnet-stg 
 
 networks:
-  mmsnet:
+  mmsnet-stg:
     driver: overlay
 

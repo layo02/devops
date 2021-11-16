@@ -1,0 +1,56 @@
+version: '3.2' 
+
+services:
+  mms-api:
+    image: gitlab.accessheritage.com:5050/mms2/mms-backend/mms-api:${API_TAG:-latest}
+    ports:
+      - "5002:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=QA
+      - ASPNETCORE_URLS=http://+:80
+    volumes:
+      - type: bind
+        source: /home/teamcity/.gnupg
+        target: /root/.gnupg
+
+    deploy:
+      placement:
+        constraints: [node.role == worker]
+      replicas:1
+      restart_policy:
+        max_attempts: 3
+        condition: on-failure       
+      update_config:
+        parallelism: 1
+        delay: 10s
+    networks: 
+      - mmsnet-qa
+
+  mms-ui:
+    image: gitlab.accessheritage.com:5050/mms2/mms-frontend/mms-ui:${UI_TAG:-latest}
+    ports:
+      - "3002:3000"
+    environment:
+      - API_BASE_URL=https://mms2-api-qa.accessheritage.com
+      - APP_OIDC_TENANTID=1c52729b-e37a-46f3-9b7a-94d0ce8eb632
+      - APP_OIDC_CLIENTID=646f5b4e-53fb-4eee-89e9-4b71d542317c
+    depends_on:
+      - mms-api
+
+    deploy:
+      placement:
+        constraints: [node.role == worker]
+      replicas:1
+      restart_policy:
+        max_attempts: 3
+        condition: on-failure       
+      update_config:
+        parallelism: 1 
+        delay: 10s 
+    networks: 
+      - mmsnet-qa 
+
+networks:
+  mmsnet-qa:
+    driver: overlay
+
