@@ -1,0 +1,39 @@
+version: '3.2' 
+
+services:
+  mms-api:
+    image: gitlab.accessheritage.com:5050/mms2/mms-backend/mms-api:${API_TAG:-latest}
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+    volumes:
+      - type: bind
+        source: /home/teamcity/.gnupg
+        target: /root/.gnupg
+
+    deploy:
+      placement:
+        constraints: [node.role == worker]
+      replicas: 2
+      restart_policy:
+        max_attempts: 3
+        condition: on-failure       
+      update_config:
+        parallelism: 1
+        delay: 10s
+
+  mms-ui:
+    image: gitlab.accessheritage.com:5050/mms2/mms-frontend/mms-ui:${UI_TAG:-latest}
+    depends_on:
+      - mms-api
+
+    deploy:
+      placement:
+        constraints: [node.role == worker]
+      replicas: 2
+      restart_policy:
+        max_attempts: 3
+        condition: on-failure       
+      update_config:
+        parallelism: 1 
+        delay: 10s 
+
