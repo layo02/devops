@@ -1,0 +1,22 @@
+#/lib/systemd/system
+[Unit]
+Description=TeamCity Build Agent
+After=network.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+ExecStart=/home/teamcityagent/buildAgent/bin/agent.sh start
+Type=forking
+RemainAfterExit=yes
+User=teamcityagent
+Group=users
+SyslogIdentifier=teamcity_agent
+PrivateTmp=yes
+PIDFile=/home/teamcityagent/buildAgent/logs/buildAgent.pid
+ExecStop=/home/teamcityagent/buildAgent/bin/agent.sh stop
+RestartSec=5
+Restart=on-failure
+
+SuccessExitStatus=143 0

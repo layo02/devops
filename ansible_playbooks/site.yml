@@ -1,0 +1,8 @@
+- hosts: teamcity_agents 
+  become: yes
+  roles:
+    - role: geerlingguy.java
+    - role: teamcity_agent
+      vars:
+        teamcity_agent_server_url: https://teamcity.accessheritage.com
+        teamcity_agent_install_dir: "{{ teamcity_agent_home }}/buildAgent"
