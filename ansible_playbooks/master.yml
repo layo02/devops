@@ -1,0 +1,5 @@
+- hosts: docker_swarm_monitoring_endpoint
+  roles:
+    - swarm-monitoring
+  become: yes
+      
