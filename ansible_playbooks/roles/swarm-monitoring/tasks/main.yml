@@ -1,0 +1,36 @@
+---
+- name: Set variables
+  tags: monitoring-setup
+  set_fact:
+    repo_dir: "/tmp/swarm-monitoring"
+    stack_name: "monitoring"
+
+- name: Check if deployed
+  tags: monitoring-setup
+  shell: "docker stack ls | grep {{ stack_name }}"
+  register: deployed
+  ignore_errors: true
+
+- name: Clone swarm-monitoring repository
+  tags: monitoring-setup
+  ansible.builtin.git:
+    repo: git@gitlab.accessheritage.com:mms2/swarm-monitoring.git
+    dest: "{{ repo_dir }}"
+    clone: yes
+    accept_hostkey: yes
+    key_file: /gitlab_deploy_keys/deploy-keys
+  when: deployed | length > 0
+
+- name: Run monitoring stack
+  tags: monitoring-setup
+  command: "docker stack deploy -c monitoring.yml {{ stack_name }}"
+  args:
+    chdir: "{{ repo_dir }}"
+  when: deployed | length > 0
+
+- name: Clean
+  tags: monitoring-setup
+  ansible.builtin.file:
+    path: "{{ repo_dir }}"
+    state: absent
+  when: deployed | length > 0

@@ -20,5 +20,8 @@ mms2-dev-swm-mgr3 swarm_labels=deploy
 mms2-dev-swm-wkr1
 mms2-dev-swm-wkr2
 
+[docker_swarm_monitoring_endpoint]
+mms2-dev-swm-mgr1.accessheritage.com
+
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3
