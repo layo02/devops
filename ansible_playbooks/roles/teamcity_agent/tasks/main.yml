@@ -1,0 +1,4 @@
+---
+# tasks file for teamcity_agent
+- include: setup-teamcity-user.yml
+- include: teamcity-agent.yml

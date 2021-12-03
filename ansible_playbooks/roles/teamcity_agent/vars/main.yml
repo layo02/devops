@@ -1,0 +1,5 @@
+---
+teamcity_agent_user: teamcityagent
+teamcity_agent_group: teamcityagent
+teamcity_agent_home: /home/teamcityagent
+teamcity_agent_hostname: "{{ ansible_hostname }}"
