@@ -1,0 +1,2 @@
+redis_exporter_target: "172.18.1.94:9121"
+elasticsearch_exporter_target: "172.18.1.94:9114"
