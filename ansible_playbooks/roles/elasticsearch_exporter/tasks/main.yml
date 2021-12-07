@@ -1,0 +1,29 @@
+---
+- name: Set variables
+  set_fact:
+    es_username: "{{ lookup('env', 'ELASTICSEARCH_ADMIN_USERNAME') }}"
+    es_password: "{{ lookup('env', 'ELASTICSEARCH_ADMIN_PASSWORD') }}"
+    dc_file: /tmp/elasticsearch_exporter.yml
+
+- name: Copy docker-compose file
+  tags: elasticsearch_exporter
+  ansible.builtin.copy:
+    src: elasticsearch_exporter.yml
+    dest: "{{ dc_file }}"
+    force: true
+
+- name: Replace credentials
+  tags: elasticsearch_exporter
+  ansible.builtin.replace:
+    path: "{{ dc_file }}"
+    regexp: "{{ item.template }}"
+    replace: "{{ item.target }}"
+  loop:
+    - { template: "ELASTICSEARCH_ADMIN_USERNAME", target: "{{ es_username }}" }
+    - { template: "ELASTICSEARCH_ADMIN_PASSWORD", target: "{{ es_password }}" }
+
+- name: Run elastisearch exporter
+  tags: elasticsearch_exporter
+  command: "docker-compose -f {{ dc_file }} up -d"
+  args:
+    chdir: /tmp/
