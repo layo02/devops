@@ -1,4 +1,11 @@
 ---
+
+# Installs elasticsearch_exporter running with docker-compose at Elasticsearch servers.
+# Steps to install:
+#     1. Set environment variables ELASTICSEARCH_ADMIN_USERNAME and ELASTICSEARCH_ADMIN_PASSWORD with proper credentials
+#     2. Make sure that target server is in ansible_playbook/inventories/<inventory>/inventory file
+#     3. Run ansible-playbook -i inventories/dev/inventory.dev -u <user> master.yml -l <group> -K
+
 - name: Set variables
   set_fact:
     es_username: "{{ lookup('env', 'ELASTICSEARCH_ADMIN_USERNAME') }}"
