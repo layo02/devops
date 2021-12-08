@@ -19,18 +19,29 @@
     clone: yes
     accept_hostkey: yes
     key_file: /gitlab_deploy_keys/deploy-keys
-  when: deployed | length > 0
+  when: deployed.stdout | length == 0
+
+- name: Set static targets
+  tags: monitoring-setup
+  ansible.builtin.replace:
+    path: "{{ repo_dir }}/prometheus/conf/prometheus.yml"
+    regexp: "{{ item.template }}"
+    replace: "{{ item.target }}"
+  loop: 
+    - { template: "REDIS_EXPORTER_TARGET", target: "{{ redis_exporter_target }}" }
+    - { template: "ELASTICSEARCH_EXPORTER_TARGET", target: "{{ elasticsearch_exporter_target }}" }
+  when: deployed.stdout | length == 0
 
 - name: Run monitoring stack
   tags: monitoring-setup
   command: "docker stack deploy -c monitoring.yml {{ stack_name }}"
   args:
     chdir: "{{ repo_dir }}"
-  when: deployed | length > 0
+  when: deployed.stdout | length == 0
 
 - name: Clean
   tags: monitoring-setup
   ansible.builtin.file:
     path: "{{ repo_dir }}"
     state: absent
-  when: deployed | length > 0
+  when: deployed.stdout | length == 0

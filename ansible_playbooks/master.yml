@@ -3,3 +3,7 @@
     - swarm-monitoring
   become: yes
       
+- hosts: dev_logs
+  roles:
+    - elasticsearch_exporter
+  become: yes

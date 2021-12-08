@@ -1,0 +1,5 @@
+[docker_swarm_monitoring_endpoint]
+mms2-dev-swm-mgr1.accessheritage.com
+
+[dev_logs]
+172.18.1.94
