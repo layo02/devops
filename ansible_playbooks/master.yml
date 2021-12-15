@@ -7,3 +7,8 @@
   roles:
     - elasticsearch_exporter
   become: yes
+
+- hosts: efk
+  roles:
+    - efk-stack
+  become: yes

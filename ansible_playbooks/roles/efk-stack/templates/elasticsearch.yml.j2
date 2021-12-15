@@ -1,0 +1,27 @@
+{% set nodes = groups['efk'] | join('", "') %}
+{% set nodes_amount = groups['efk'] | length | int %}
+cluster.name: EFK-{{ env | default("unknown", false) }}
+node.name: {{ inventory_hostname }}
+node.master: true
+node.data: true
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+network.host: 0.0.0.0
+http.port: 9200
+cluster.initial_master_nodes: ["{{ nodes }}"]
+discovery.seed_hosts: ["{{ nodes }}"]
+discovery.zen.minimum_master_nodes: {{ nodes_amount // 2 | int + 1 }}
+xpack.security.enabled: false
+action.auto_create_index: true
+searchguard.ssl.transport.pemtrustedcas_filepath: certs/root-ca.pem
+searchguard.ssl.http.pemtrustedcas_filepath: certs/root-ca.pem
+searchguard.ssl.transport.pemcert_filepath: certs/{{ inventory_hostname }}.pem
+searchguard.ssl.transport.pemkey_filepath: certs/{{ inventory_hostname }}.key
+searchguard.ssl.http.pemcert_filepath: certs/{{ inventory_hostname }}_http.pem
+searchguard.ssl.http.pemkey_filepath: certs/{{ inventory_hostname }}_http.key
+searchguard.ssl.transport.enforce_hostname_verification: false
+searchguard.ssl.transport.resolve_hostname: false
+searchguard.ssl.http.enabled: true
+searchguard.nodes_dn:
+- CN={{ inventory_hostname }}.accessheritage.com,OU=IN,O=Heritage Environmental Services
+searchguard.authcz.admin_dn: []
