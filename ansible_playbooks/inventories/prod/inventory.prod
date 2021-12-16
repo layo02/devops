@@ -1,0 +1,14 @@
+[efk]
+mms2-prd-swm-mon1.accessheritage.com kibana=true
+mms2-prd-swm-mon2.accessheritage.com
+mms2-prd-swm-mon3.accessheritage.com
+
+[redis:children]
+redis-masters
+redis-slaves
+
+[redis-masters]
+mms2-prd-swm-mon1.accessheritage.com
+
+[redis-slaves]
+mms2-prd-swm-mon2.accessheritage.com

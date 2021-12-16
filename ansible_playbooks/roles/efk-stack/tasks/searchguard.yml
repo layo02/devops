@@ -1,0 +1,26 @@
+---
+- name: Set variables
+  set_fact:
+    plugin_version: "7.15.2-52.5.0"
+    plugin: "search-guard-suite-plugin"
+    plugin_name: "search-guard-7"
+    es_dir: "/usr/share/elasticsearch/"
+
+- name: Check if installed
+  shell: "bin/elasticsearch-plugin list | grep {{ plugin_name }}"
+  args:
+    chdir: "{{ es_dir }}"
+  register: installed
+  ignore_errors: yes
+
+- name: Download Search Guard
+  get_url:
+    url: https://maven.search-guard.com/search-guard-suite-release/com/floragunn/{{ plugin }}/{{ plugin_version }}/{{ plugin }}-{{ plugin_version }}.zip
+    dest: "{{ es_dir }}"
+  when: installed.stdout | length == 0
+
+- name: Install Search Guard plugin
+  command: bin/elasticsearch-plugin install -b file:///{{ es_dir }}/{{ plugin }}-{{ plugin_version }}.zip
+  args:
+    chdir: "{{ es_dir }}"
+  when: installed.stdout | length == 0
