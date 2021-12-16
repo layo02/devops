@@ -1,0 +1,32 @@
+---
+- name: Disable Transparent HugePages
+  tags: redis
+  shell: "echo 'never' > /sys/kernel/mm/transparent_hugepage/enabled"
+  ignore_errors: true
+
+- name: Set vm.overcommit_memory to 1
+  tags: redis
+  ansible.posix.sysctl:
+    name: vm.overcommit_memory
+    value: "1"
+    state: present
+
+- name: Install Redis
+  tags: redis
+  apt:
+    name: redis
+    state: latest
+    update_cache: yes
+
+- name: Copy configuration file
+  tags: redis
+  ansible.builtin.template:
+    src: redis.conf.j2
+    dest: /etc/redis/redis.conf
+    force: yes
+
+- name: Restart service
+  tags: redis
+  ansible.builtin.systemd:
+    name: redis
+    state: restarted

@@ -12,3 +12,8 @@
   roles:
     - efk-stack
   become: yes
+
+- hosts: redis
+  roles:
+    - redis
+  become: yes
