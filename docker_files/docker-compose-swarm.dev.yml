@@ -1,6 +1,14 @@
 version: '3.2' 
 
 services:
+  mms-identity-server:
+    ports:
+      - "5011:5008"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=DEV
+    networks: 
+      - mmsnet-dev
+        
   mms-api:
     ports:
       - "5001:80"
