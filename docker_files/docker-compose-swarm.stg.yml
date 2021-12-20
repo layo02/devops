@@ -5,7 +5,7 @@ services:
     ports:
       - "5013:5008"
     environment:
-      - ASPNETCORE_ENVIRONMENT=DEV
+      - ASPNETCORE_ENVIRONMENT=STG
     networks: 
       - mmsnet-stg
         
