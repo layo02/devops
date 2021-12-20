@@ -5,7 +5,7 @@ services:
     ports:
       - "5014:5008"
     environment:
-      - ASPNETCORE_ENVIRONMENT=DEV
+      - ASPNETCORE_ENVIRONMENT=UAT
     networks: 
       - mmsnet-uat
         
