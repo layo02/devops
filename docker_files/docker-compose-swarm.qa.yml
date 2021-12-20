@@ -23,7 +23,7 @@ services:
     environment:
       - API_BASE_URL=https://mms2-api-qa.accessheritage.com
       - APP_OIDC_TENANTID=1c52729b-e37a-46f3-9b7a-94d0ce8eb632
-      - APP_OIDC_CLIENTID=312fdf2a-e7b0-469a-b3fc-7806c23a27d7
+      - APP_OIDC_CLIENTID=646f5b4e-53fb-4eee-89e9-4b71d542317c
     networks: 
       - mmsnet-qa 
 
