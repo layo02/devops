@@ -12,6 +12,8 @@ services:
       - type: bind
         source: /home/teamcity/.gnupg
         target: /root/.gnupg
+    depends_on:
+      - mms-identity-server
 
   mms-ui:
     image: gitlab.accessheritage.com:5050/mms2/mms-frontend/mms-ui:${UI_TAG:-latest}
@@ -23,3 +25,16 @@ services:
       - APP_OIDC_CLIENTID=${OIDC_CLIENTID}
     depends_on:
       - mms-api
+
+
+  mms-identity-server:
+    image: gitlab.accessheritage.com:5050/mms2/mms-backend/mms-identity-server:${IDENTITY_TAG:-latest}
+    ports:
+      - "${IDENTITY_PORT}:5008"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ENV_NAME}
+      - ASPNETCORE_URLS=http://+:80
+    volumes:
+      - type: bind
+        source: /home/teamcity/.gnupg
+        target: /root/.gnupg
