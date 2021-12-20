@@ -5,7 +5,7 @@ services:
     ports:
       - "5012:5008"
     environment:
-      - ASPNETCORE_ENVIRONMENT=DEV
+      - ASPNETCORE_ENVIRONMENT=QA
     networks: 
       - mmsnet-qa
         
