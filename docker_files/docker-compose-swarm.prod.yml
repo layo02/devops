@@ -1,0 +1,33 @@
+version: '3.2' 
+
+services:
+  mms-identity-server:
+    ports:
+      - "5015:5008"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    networks: 
+      - mmsnet-prod
+        
+  mms-api:
+    ports:
+      - "5005:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    networks: 
+      - mmsnet-prod
+
+  mms-ui:
+    ports:
+      - "3005:3000"
+    environment:
+      - API_BASE_URL=https://mms2-api-prd.accessheritage.com
+      - APP_OIDC_TENANTID=1c52729b-e37a-46f3-9b7a-94d0ce8eb632
+      - APP_OIDC_CLIENTID=c8b58a10-2d1d-435d-a371-bf1059a9f6ee
+    networks: 
+      - mmsnet-prod 
+
+networks:
+  mmsnet-prod:
+    driver: overlay
+
