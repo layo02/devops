@@ -1,0 +1,26 @@
+---
+- name: Download Kibana package
+  get_url:
+    url: https://artifacts.elastic.co/downloads/kibana/kibana-{{ version }}-amd64.deb
+    dest: /tmp
+
+- name: Install Kibana package
+  apt:
+    deb: "{{ kibana_pkg }}"
+
+- name: Copy configuration file
+  ansible.builtin.template:
+    src: kibana.yml.j2
+    dest: /etc/kibana/kibana.yml
+    force: true
+
+- name: Remove Kibana package
+  ansible.builtin.file:
+    path: "{{ kibana_pkg }}"
+    state: absent
+
+- name: Restart Kibana service
+  ansible.builtin.systemd:
+    name: kibana
+    state: restarted
+

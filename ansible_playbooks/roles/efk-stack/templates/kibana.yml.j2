@@ -1,0 +1,10 @@
+server.port: 5601
+server.host: "0.0.0.0"
+server.publicBaseUrl: {{ kibana_url }}
+server.name: "Kibana HES {{ env | capitalize }}"
+elasticsearch.hosts: "https://localhost:9200"
+elasticsearch.username: "admin"
+elasticsearch.password: "admin"
+elasticsearch.ssl.verificationMode: "none"
+elasticsearch.requestHeadersWhitelist: [ "Authorization", "sgtenant" ]
+xpack.security.enabled: false

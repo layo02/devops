@@ -2,8 +2,15 @@
   roles:
     - swarm-monitoring
   become: yes
-      
-- hosts: dev_logs
+
+- hosts: efk
   roles:
+    - efk-stack
     - elasticsearch_exporter
   become: yes
+
+- hosts: redis-*
+  roles:
+    - redis
+  become: yes
+

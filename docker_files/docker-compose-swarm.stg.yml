@@ -1,6 +1,14 @@
 version: '3.2' 
 
 services:
+  mms-identity-server:
+    ports:
+      - "5013:5008"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=STG
+    networks: 
+      - mmsnet-stg
+        
   mms-api:
     ports:
       - "5003:80"
@@ -15,7 +23,8 @@ services:
     environment:
       - API_BASE_URL=https://mms2-api-stg.accessheritage.com
       - APP_OIDC_TENANTID=1c52729b-e37a-46f3-9b7a-94d0ce8eb632
-      - APP_OIDC_CLIENTID=312fdf2a-e7b0-469a-b3fc-7806c23a27d7
+      - APP_OIDC_CLIENTID=fbd508fb-6163-45a0-ae97-12c15be99b0b
+
     networks: 
       - mmsnet-stg 
 

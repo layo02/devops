@@ -1,0 +1,97 @@
+---
+- name: Set variables
+  set_fact:
+    root_key: "{{ tls_dir }}/root-ca.key"
+    root_csr: "{{ tls_dir }}/root-ca.scr"
+    root_cert: "{{ tls_dir }}/root-ca.pem"
+    main_key: "{{ tls_dir }}/{{ inventory_hostname }}.key"
+    main_csr: "{{ tls_dir }}/{{ inventory_hostname }}.csr"
+    main_cert: "{{ tls_dir }}/{{ inventory_hostname }}.pem"
+    http_key: "{{ tls_dir }}/{{ inventory_hostname }}_http.key"
+    http_csr: "{{ tls_dir }}/{{ inventory_hostname }}_http.csr"
+    http_cert: "{{ tls_dir }}/{{ inventory_hostname }}_http.pem"
+
+- name: Create certificate directory
+  ansible.builtin.file:
+    path: "{{ tls_dir }}"
+    state: directory
+
+- name: Generate Root CA key locally
+  openssl_privatekey:
+    path: "root-ca.key"
+  delegate_to: localhost
+  run_once: true
+  become: false
+
+- name: Сreate Root CA CSR locally
+  openssl_csr:
+    path: "root-ca.csr"
+    privatekey_path: "root-ca.key"
+    common_name: "Root-CA"
+  delegate_to: localhost
+  run_once: true
+  become: false
+
+- name: Sign Root CA CSR locally
+  openssl_certificate:
+    path: "root-ca.pem"
+    csr_path: "root-ca.csr"
+    privatekey_path: "root-ca.key"
+    provider: selfsigned
+  delegate_to: localhost
+  run_once: true
+  become: false
+
+- name: Copy Root CA bundle to remote servers
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ tls_dir }}"
+    mode: 0644
+    force: false
+  loop:
+    - "root-ca.key"
+    - "root-ca.csr"
+    - "root-ca.pem"
+
+- name: Generate Node CA key
+  openssl_privatekey:
+    path: "{{ item }}"
+    mode: 0600
+    owner: "elasticsearch"
+    group: "elasticsearch"
+  loop:
+    - "{{ main_key }}"
+    - "{{ http_key }}"
+
+- name: Сreate Node CA CSR
+  openssl_csr:
+    path: "{{ item.path }}"
+    mode: 0644
+    privatekey_path: "{{ item.key }}"
+    common_name: "{{ inventory_hostname }}"
+  loop:
+    - { path: "{{ main_csr }}", key: "{{ main_key }}" }
+    - { path: "{{ http_csr }}", key: "{{ http_key }}" }
+
+- name: Sign Node CA CSR
+  openssl_certificate:
+    path: "{{ item.path }}"
+    mode: 0644
+    csr_path: "{{ item.csrpath }}"
+    privatekey_path: "{{ item.pkpath }}"
+    provider: selfsigned
+  loop:
+    - { path: "{{ main_cert }}", csrpath: "{{ main_csr }}", pkpath: "{{ main_key }}" }
+    - { path: "{{ http_cert }}", csrpath: "{{ http_csr }}", pkpath: "{{ http_key }}" }
+
+- name: Remove Root CA bundle
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "root-ca.key"
+    - "root-ca.csr"
+    - "root-ca.pem"
+  delegate_to: localhost
+  run_once: true
+  become: false
