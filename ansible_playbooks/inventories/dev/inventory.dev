@@ -3,3 +3,6 @@ mms2-dev-swm-mgr1.accessheritage.com
 
 [efk]
 172.18.1.94
+
+[redis]
+172.18.1.94
