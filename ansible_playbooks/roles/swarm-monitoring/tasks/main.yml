@@ -21,15 +21,16 @@
     key_file: /gitlab_deploy_keys/deploy-keys
   when: deployed.stdout | length == 0
 
-- name: Set static targets
+- name: Set Redis static targets
   tags: monitoring-setup
-  ansible.builtin.replace:
-    path: "{{ repo_dir }}/prometheus/conf/prometheus.yml"
-    regexp: "{{ item.template }}"
-    replace: "{{ item.target }}"
-  loop: 
-    - { template: "REDIS_EXPORTER_TARGET", target: "{{ redis_exporter_target }}" }
-    - { template: "ELASTICSEARCH_EXPORTER_TARGET", target: "{{ elasticsearch_exporter_target }}" }
+  shell: "sed -i -r '/job_name: \"redis\"$/!{p;d;};n;n;a\\          \\- {{ item }}:9121' {{ repo_dir }}/prometheus/conf/prometheus.yml"
+  loop: "{{ groups['redis'] }}"
+  when: deployed.stdout | length == 0
+
+- name: Set Elasticsearch static targets
+  tags: monitoring-setup
+  shell: "sed -i -r '/job_name: \"elasticsearch\"$/!{p;d;};n;n;a\\          \\- {{ item }}:9114' {{ repo_dir }}/prometheus/conf/prometheus.yml"
+  loop: "{{ groups['efk'] }}"
   when: deployed.stdout | length == 0
 
 - name: Run monitoring stack
