@@ -1,0 +1,16 @@
+---
+- name: Set variables
+  tags: efk-stack
+  set_fact:
+    sgadmin_path: "{{ es_dir }}/plugins/search-guard-7/tools/"
+    config_dir: /usr/share/elasticsearch/plugins/search-guard-7/sgconfig
+
+- name: Make sgadmin.sh executable
+  tags: efk-stack
+  file:
+    path: "{{ sgadmin_path }}/sgadmin.sh"
+    mode: 0755
+
+- name: Initialize Search Guard
+  tags: efk-stack
+  command: "{{ sgadmin_path }}/sgadmin.sh -cd {{ config_dir }} -icl -key {{ tls_dir }}/{{ admin_key }} -cert {{ tls_dir }}/{{ admin_crt }} -cacert {{ tls_dir }}/{{ root_crt }} -nhnv -h {{ inventory_hostname }}"

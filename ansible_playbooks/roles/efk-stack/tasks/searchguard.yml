@@ -1,26 +1,125 @@
 ---
 - name: Set variables
+  tags: efk-stack
   set_fact:
-    plugin_version: "7.15.2-52.5.0"
+    tool_archive: search-guard-tlstool-{{ sgtlstool_version }}.zip
+    target_dir: /tmp/sgtlstool
+    rootca_config: tlscfg.yml
+    crt_dir: out
+    node_config: node-crt-config.yml
+    keysize: 2048
+    validityDays: 3650
     plugin: "search-guard-suite-plugin"
     plugin_name: "search-guard-7"
-    es_dir: "/usr/share/elasticsearch/"
 
 - name: Check if installed
+  tags: efk-stack
   shell: "bin/elasticsearch-plugin list | grep {{ plugin_name }}"
   args:
     chdir: "{{ es_dir }}"
   register: installed
   ignore_errors: yes
 
-- name: Download Search Guard
+- name: Create archive directory
+  tags: efk-stack
+  file:
+    path: "{{ target_dir }}"
+    state: directory
+
+- name: Download Search Guard tlstool
+  tags: efk-stack
   get_url:
-    url: https://maven.search-guard.com/search-guard-suite-release/com/floragunn/{{ plugin }}/{{ plugin_version }}/{{ plugin }}-{{ plugin_version }}.zip
+    url: https://maven.search-guard.com/search-guard-tlstool/{{ sgtlstool_version }}/{{ tool_archive }}
+    dest: "{{ target_dir }}/{{ tool_archive }}"
+
+- name: Unarchive Search Guard tlstool
+  tags: efk-stack
+  ansible.builtin.unarchive:
+    src: "{{ target_dir }}/{{ tool_archive }}"
+    dest: "{{ target_dir }}"
+    remote_src: yes
+
+- name: Copy Root CA configuration file
+  tags: efk-stack
+  template:
+    src: ca-crt-config.yml.j2
+    dest: "{{ target_dir }}/{{ rootca_config }}"
+  when: kibana is defined
+
+- name: Create Root CA certificate
+  tags: efk-stack
+  command: "tools/sgtlstool.sh -c {{ rootca_config }} -ca -crt"
+  args:
+    chdir: "{{ target_dir }}"
+  when: kibana is defined
+
+- name: Download Root CA certificates
+  tags: efk-stack
+  ansible.builtin.fetch:
+    src: "{{ target_dir }}/{{ crt_dir }}/{{ item }}"
+    dest: "{{ role_path }}/files/"
+    flat: yes
+  loop:
+    - "{{ root_key }}"
+    - "{{ root_crt }}"
+  when: kibana is defined
+
+- name: Create Elasticsearch certificate directory
+  tags: efk-stack
+  file:
+    path: "{{ tls_dir }}"
+    state: directory
+
+- name: Copy Root CA certificates to remote servers
+  tags: efk-stack
+  copy:
+    src: "{{ item }}"
+    dest: "{{ tls_dir }}"
+  loop:
+    - "{{ root_key }}"
+    - "{{ root_crt }}"
+
+- name: Remove local Root CA certificate
+  tags: efk-stack
+  file:
+    path: "{{ role_path }}/files/{{ item }}"
+    state: absent
+  loop:
+    - "{{ root_key }}"
+    - "{{ root_crt }}"
+  delegate_to: localhost
+  run_once: true
+  become: false
+
+- name: Copy Node certificate config
+  tags: efk-stack
+  template:
+    src: node-crt-config.yml.j2
+    dest: "{{ target_dir }}/{{ node_config }}"
+
+- name: Create Node certificate
+  tags: efk-stack
+  command: "tools/sgtlstool.sh -c {{ node_config }} -t {{ tls_dir }} -crt"
+  args:
+    chdir: "{{ target_dir }}"
+
+- name: Remove archive directory
+  tags: efk-stack
+  file:
+    path: "{{ target_dir }}"
+    state: absent
+
+- name: Download Search Guard
+  tags: efk-stack
+  get_url:
+    url: https://maven.search-guard.com/search-guard-suite-release/com/floragunn/{{ plugin }}/{{ sg_version }}/{{ plugin }}-{{ sg_version }}.zip
     dest: "{{ es_dir }}"
   when: installed.stdout | length == 0
 
 - name: Install Search Guard plugin
-  command: bin/elasticsearch-plugin install -b file:///{{ es_dir }}/{{ plugin }}-{{ plugin_version }}.zip
+  tags: efk-stack
+  command: bin/elasticsearch-plugin install -b file:///{{ es_dir }}/{{ plugin }}-{{ sg_version }}.zip
   args:
     chdir: "{{ es_dir }}"
   when: installed.stdout | length == 0
+

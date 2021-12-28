@@ -2,38 +2,16 @@
 - name: Set variables
   tags: efk-stack
   set_fact:
-    es_pkg: /tmp/elasticsearch.deb
-    kibana_pkg: /tmp/kibana-{{ version }}-amd64.deb
     tls_dir: "/etc/elasticsearch/certs"
+    es_dir: "/usr/share/elasticsearch/"
+    root_key: root-ca.key
+    root_crt: root-ca.pem
+    admin_key: admin.key
+    admin_crt: admin.pem
 
-- name: Install Java
+- name: Install Elasticsearch
   tags: efk-stack
-  ansible.builtin.apt:
-    name: default-jre
-    state: latest
-    update_cache: yes
-
-- name: Download Elasticsearch package
-  tags: efk-stack
-  get_url:
-    url: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ version }}-amd64.deb"
-    dest: "{{ es_pkg }}"
-
-- name: Install Elasticsearch package
-  tags: efk-stack
-  apt:
-    deb: "{{ es_pkg }}"
-
-- name: Copy configuration file
-  tags: efk-stack
-  ansible.builtin.template:
-    src: elasticsearch.yml.j2
-    dest: /etc/elasticsearch/elasticsearch.yml
-    force: true
-
-- name: Create TLS certificates
-  tags: efk-stack
-  include_tasks: tls-certificates.yml
+  include_tasks: elasticsearch.yml
 
 - name: Install Search Guard plugin
   tags: efk-stack
@@ -44,15 +22,11 @@
   include_tasks: kibana.yml
   when: kibana is defined
 
-- name: Remove Elasticsearch package
+- name: Start services
   tags: efk-stack
-  ansible.builtin.file:
-    path: "{{ es_pkg }}"
-    state: absent
+  include_tasks: start-services.yml
 
-- name: Restart Elasticsearch service
+- name: Initialize Search Guard
   tags: efk-stack
-  ansible.builtin.systemd:
-    name: elasticsearch
-    state: restarted
+  include_tasks: sg-init.yml
 

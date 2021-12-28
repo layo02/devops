@@ -6,7 +6,7 @@
 - hosts: efk
   roles:
     - efk-stack
-    - elasticsearch_exporter
+    - elasticsearch-exporter
   become: yes
 
 - hosts: redis-*

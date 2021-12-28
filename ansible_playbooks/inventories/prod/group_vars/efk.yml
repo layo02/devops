@@ -1,3 +1,7 @@
 env: "production"
 version: 7.15.2
+sg_version: 7.15.2-52.5.0
+sgtlstool_version: 1.8
 kibana_url: "https://kibana-prod.accessheritage.com"
+org: "Heritage Environmental Services"
+sg_user: admin
