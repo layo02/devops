@@ -1,0 +1,18 @@
+---
+- name: Set variables
+  tags: redis-exporter
+  set_fact:
+    dc_file: /tmp/redis-exporter.yml
+
+- name: Copy docker-compose file
+  tags: redis-exporter
+  ansible.builtin.copy:
+    src: redis-exporter.yml
+    dest: "{{ dc_file }}"
+    force: true
+
+- name: Run Redis exporter
+  tags: redis-exporter
+  command: "docker-compose -f {{ dc_file }} up -d"
+  args:
+    chdir: /tmp/
