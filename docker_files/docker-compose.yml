@@ -37,13 +37,8 @@ services:
       - mms-api
 
   mms-storybook:
-    profiles: ["storybook"]
     image: gitlab.accessheritage.com:5050/mms2/mms-frontend/mms-storybook:${STORYBOOK_TAG:-latest}
     ports:
       - "3011:3001"
-    environment:
-      - API_BASE_URL=https://mms2-api-dev.accessheritage.com
-      - APP_OIDC_TENANTID=${OIDC_TENANTID}
-      - APP_OIDC_CLIENTID=${OIDC_CLIENTID}
     depends_on:
       - mms-api
