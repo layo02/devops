@@ -25,12 +25,14 @@
   file:
     path: "{{ target_dir }}"
     state: directory
+  when: installed.stdout | length == 0
 
 - name: Download Search Guard tlstool
   tags: efk-stack
   get_url:
     url: https://maven.search-guard.com/search-guard-tlstool/{{ sgtlstool_version }}/{{ tool_archive }}
     dest: "{{ target_dir }}/{{ tool_archive }}"
+  when: installed.stdout | length == 0
 
 - name: Unarchive Search Guard tlstool
   tags: efk-stack
@@ -38,20 +40,21 @@
     src: "{{ target_dir }}/{{ tool_archive }}"
     dest: "{{ target_dir }}"
     remote_src: yes
+  when: installed.stdout | length == 0
 
 - name: Copy Root CA configuration file
   tags: efk-stack
   template:
     src: ca-crt-config.yml.j2
     dest: "{{ target_dir }}/{{ rootca_config }}"
-  when: kibana is defined
+  when: kibana is defined and installed.stdout | length == 0
 
 - name: Create Root CA certificate
   tags: efk-stack
   command: "tools/sgtlstool.sh -c {{ rootca_config }} -ca -crt"
   args:
     chdir: "{{ target_dir }}"
-  when: kibana is defined
+  when: kibana is defined and installed.stdout | length == 0
 
 - name: Download Root CA certificates
   tags: efk-stack
@@ -62,13 +65,14 @@
   loop:
     - "{{ root_key }}"
     - "{{ root_crt }}"
-  when: kibana is defined
+  when: kibana is defined and installed.stdout | length == 0
 
 - name: Create Elasticsearch certificate directory
   tags: efk-stack
   file:
     path: "{{ tls_dir }}"
     state: directory
+  when: installed.stdout | length == 0
 
 - name: Copy Root CA certificates to remote servers
   tags: efk-stack
@@ -78,6 +82,7 @@
   loop:
     - "{{ root_key }}"
     - "{{ root_crt }}"
+  when: installed.stdout | length == 0
 
 - name: Remove local Root CA certificate
   tags: efk-stack
@@ -90,24 +95,28 @@
   delegate_to: localhost
   run_once: true
   become: false
+  when: installed.stdout | length == 0
 
 - name: Copy Node certificate config
   tags: efk-stack
   template:
     src: node-crt-config.yml.j2
     dest: "{{ target_dir }}/{{ node_config }}"
+  when: installed.stdout | length == 0
 
 - name: Create Node certificate
   tags: efk-stack
   command: "tools/sgtlstool.sh -c {{ node_config }} -t {{ tls_dir }} -crt"
   args:
     chdir: "{{ target_dir }}"
+  when: installed.stdout | length == 0
 
 - name: Remove archive directory
   tags: efk-stack
   file:
     path: "{{ target_dir }}"
     state: absent
+  when: installed.stdout | length == 0
 
 - name: Download Search Guard
   tags: efk-stack
