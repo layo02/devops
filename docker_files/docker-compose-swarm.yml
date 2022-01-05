@@ -4,7 +4,7 @@ services:
   mms-identity-server:
     image: gitlab.accessheritage.com:5050/mms2/mms-backend/mms-identity-server:${IDENTITY_TAG:-latest}
     environment:
-      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_URLS=http://+:5008
     volumes:
       - type: bind
         source: /home/teamcity/.gnupg
