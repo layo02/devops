@@ -7,7 +7,7 @@ services:
       - "${IDENTITY_PORT}:5008"
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENV_NAME}
-      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_URLS=http://+:5008
     volumes:
       - type: bind
         source: /home/teamcity/.gnupg
