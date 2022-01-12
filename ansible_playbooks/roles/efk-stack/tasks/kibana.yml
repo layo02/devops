@@ -1,26 +1,36 @@
 ---
+- name: Set variables
+  tags: efk-stack
+  set_fact:
+    kibana_pkg: /tmp/kibana-{{ version }}-amd64.deb
+
 - name: Download Kibana package
+  tags: efk-stack
   get_url:
     url: https://artifacts.elastic.co/downloads/kibana/kibana-{{ version }}-amd64.deb
     dest: /tmp
 
 - name: Install Kibana package
+  tags: efk-stack
   apt:
     deb: "{{ kibana_pkg }}"
 
 - name: Copy configuration file
+  tags: efk-stack
   ansible.builtin.template:
     src: kibana.yml.j2
     dest: /etc/kibana/kibana.yml
     force: true
 
 - name: Remove Kibana package
+  tags: efk-stack
   ansible.builtin.file:
     path: "{{ kibana_pkg }}"
     state: absent
 
-- name: Restart Kibana service
+- name: Stop Kibana service
+  tags: efk-stack
   ansible.builtin.systemd:
     name: kibana
-    state: restarted
+    state: stopped
 

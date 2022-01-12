@@ -1,0 +1,13 @@
+---
+- name: Start Elasticsearch
+  tags: efk-stack
+  ansible.builtin.systemd:
+    name: elasticsearch
+    state: restarted
+
+- name: Start Kibana
+  tags: efk-stack
+  ansible.builtin.systemd:
+    name: kibana
+    state: restarted
+  when: kibana is defined

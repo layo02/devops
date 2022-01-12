@@ -1,0 +1,8 @@
+{% set dn1, dn2, dn3 = inventory_hostname.split('.') %}
+ca:
+   root:
+      dn: CN={{ inventory_hostname }},OU={{ env | capitalize }},O={{ org }},DC={{ dn2 }},DC={{ dn3 }}
+      keysize: "{{ keysize }}"
+      validityDays: "{{ validityDays }}"
+      pkPassword: none
+      file: "{{ root_crt }}"

@@ -1,0 +1,20 @@
+{% set dn1, dn2, dn3 = inventory_hostname.split('.') %}
+ca:
+   root:
+      dn: CN={{ inventory_hostname }},OU={{ env | capitalize }},O={{ org }},DC={{ dn2 }},DC={{ dn3 }}
+      keysize: {{ keysize }}
+      validityDays: {{ validityDays }}
+      pkPassword: none
+      file: {{ root_crt }}
+defaults:
+      validityDays: {{ validityDays }}
+      nodeOid: "1.1"
+      pkPassword: none
+      httpsEnabled: true
+nodes:
+  - name: {{ inventory_hostname }}
+    dn: CN={{ inventory_hostname }},OU={{ env | capitalize }},O={{ org }},DC={{ dn2 }},DC={{ dn3 }}
+clients:
+  - name: {{ sg_user }}
+    dn: CN={{ sg_user }}.{{ dn2 }}.{{ dn3 }},OU={{ env | capitalize }},O={{ org }},DC={{ dn2 }},DC={{ dn3 }}
+    admin: true
