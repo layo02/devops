@@ -14,6 +14,7 @@ discovery.seed_hosts: ["{{ nodes }}"]
 discovery.zen.minimum_master_nodes: {{ nodes_amount // 2 | int + 1 }}
 xpack.security.enabled: false
 action.auto_create_index: true
+searchguard.enterprise_modules_enabled: false
 searchguard.ssl.transport.pemtrustedcas_filepath: {{ tls_dir }}/{{ root_crt }}
 searchguard.ssl.http.pemtrustedcas_filepath: {{ tls_dir }}/{{ root_crt }}
 searchguard.ssl.transport.pemcert_filepath: {{ tls_dir }}/{{ inventory_hostname }}.pem

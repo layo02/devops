@@ -1,0 +1,21 @@
+---
+- name: Set variables
+  tags: efk-stack
+  set_fact:
+    kibana_plugin: "search-guard-kibana-plugin"
+
+- name: Download Search Guard Kibana plugin
+  tags: efk-stack
+  get_url:
+    url: https://maven.search-guard.com/{{ kibana_plugin }}-release/com/floragunn/{{ kibana_plugin }}/{{ sg_kibana_version }}/{{ kibana_plugin }}-{{ sg_kibana_version }}.zip
+    dest: "{{ kibana_dir }}"
+  when: installed.stdout | length == 0
+
+- name: Install Search Guard Kibana plugin
+  tags: efk-stack
+  command: bin/kibana-plugin install file:///{{ kibana_dir }}/{{ kibana_plugin }}-{{ sg_kibana_version }}.zip
+  args:
+    chdir: "{{ kibana_dir }}"
+  when: installed.stdout | length == 0
+
+

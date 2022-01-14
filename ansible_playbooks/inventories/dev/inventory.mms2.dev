@@ -1,0 +1,8 @@
+[docker_swarm_monitoring_endpoint]
+is2-dev-swm-mgr1.accessheritage.com
+
+[efk]
+mon-dev-server
+
+[redis]
+mon-dev-server

@@ -4,6 +4,7 @@
   set_fact:
     tls_dir: "/etc/elasticsearch/certs"
     es_dir: "/usr/share/elasticsearch/"
+    kibana_dir: "/usr/share/kibana/"
     root_key: root-ca.key
     root_crt: root-ca.pem
     admin_key: admin.key
@@ -20,7 +21,10 @@
 - name: Install Kibana
   tags: efk-stack
   include_tasks: kibana.yml
-  when: kibana is defined
+
+- name: Install Search Guard Kibana plugin
+  tags: efk-stack
+  include_tasks: searchguard_kibana.yml
 
 - name: Start services
   tags: efk-stack

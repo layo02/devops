@@ -47,14 +47,12 @@
   template:
     src: ca-crt-config.yml.j2
     dest: "{{ target_dir }}/{{ rootca_config }}"
-  when: kibana is defined and installed.stdout | length == 0
 
 - name: Create Root CA certificate
   tags: efk-stack
   command: "tools/sgtlstool.sh -c {{ rootca_config }} -ca -crt"
   args:
     chdir: "{{ target_dir }}"
-  when: kibana is defined and installed.stdout | length == 0
 
 - name: Download Root CA certificates
   tags: efk-stack
@@ -65,7 +63,6 @@
   loop:
     - "{{ root_key }}"
     - "{{ root_crt }}"
-  when: kibana is defined and installed.stdout | length == 0
 
 - name: Create Elasticsearch certificate directory
   tags: efk-stack
@@ -131,4 +128,3 @@
   args:
     chdir: "{{ es_dir }}"
   when: installed.stdout | length == 0
-
