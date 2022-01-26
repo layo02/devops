@@ -21,7 +21,8 @@ services:
     ports:
       - "3002:3000"
     environment:
-      - API_BASE_URL=https://mms2-identity-qa.accessheritage.com
+      - API_BASE_URL=https://mms2-api-qa.accessheritage.com
+      - OIDC_AUTHORITY=https://mms2-identity-qa.accessheritage.com
     networks: 
       - mmsnet-qa 
 

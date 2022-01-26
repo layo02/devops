@@ -21,7 +21,8 @@ services:
     ports:
       - "3004:3000"
     environment:
-      - API_BASE_URL=https://mms2-identity-uat.accessheritage.com
+      - API_BASE_URL=https://mms2-api-uat.accessheritage.com
+      - OIDC_AUTHORITY=https://mms2-identity-uat.accessheritage.com
     networks: 
       - mmsnet-uat 
 
