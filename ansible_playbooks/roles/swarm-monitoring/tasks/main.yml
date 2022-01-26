@@ -33,6 +33,12 @@
   loop: "{{ groups['efk'] }}"
   when: deployed.stdout | length == 0
 
+- name: Copy project specific config file for FluentD
+  tags: monitoring-setup
+  shell: "cp ./fluentd/fluentd-{{ project }}.conf ./fluentd/fluentd.conf"
+  loop: "{{ groups['efk'] }}"
+  when: deployed.stdout | length == 0
+
 - name: Run monitoring stack
   tags: monitoring-setup
   command: "docker stack deploy -c monitoring.yml {{ stack_name }}"
