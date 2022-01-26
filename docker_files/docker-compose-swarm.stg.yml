@@ -21,10 +21,7 @@ services:
     ports:
       - "3003:3000"
     environment:
-      - API_BASE_URL=https://mms2-api-stg.accessheritage.com
-      - APP_OIDC_TENANTID=1c52729b-e37a-46f3-9b7a-94d0ce8eb632
-      - APP_OIDC_CLIENTID=fbd508fb-6163-45a0-ae97-12c15be99b0b
-
+      - API_BASE_URL=https://mms2-identity-stg.accessheritage.com
     networks: 
       - mmsnet-stg 
 

@@ -21,9 +21,7 @@ services:
     ports:
       - "3002:3000"
     environment:
-      - API_BASE_URL=https://mms2-api-qa.accessheritage.com
-      - APP_OIDC_TENANTID=1c52729b-e37a-46f3-9b7a-94d0ce8eb632
-      - APP_OIDC_CLIENTID=646f5b4e-53fb-4eee-89e9-4b71d542317c
+      - API_BASE_URL=https://mms2-identity-qa.accessheritage.com
     networks: 
       - mmsnet-qa 
 
