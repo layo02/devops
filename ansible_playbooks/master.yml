@@ -1,3 +1,8 @@
+- hosts: docker_swarm_all_nodes
+  roles:
+    - docker-logging-driver
+  become: yes
+
 - hosts: docker_swarm_monitoring_endpoint
   roles:
     - swarm-monitoring

@@ -1,0 +1,9 @@
+env: "dev"
+project: "mms2" # or "is2"
+version: 7.15.2
+sg_version: 7.15.2-52.5.0
+sg_kibana_version: 7.15.2-52.1.0
+sgtlstool_version: 1.8
+kibana_url: "https://kibana-dev.accessheritage.com"
+org: "Heritage Environmental Services"
+sg_user: admin

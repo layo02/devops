@@ -1,0 +1,15 @@
+[docker_swarm_all_nodes]
+is2-dev-swm-mgr1.accessheritage.com
+is2-dev-swm-mgr2.accessheritage.com
+is2-dev-swm-mgr3.accessheritage.com
+is2-dev-swm-wkr1.accessheritage.com
+is2-dev-swm-wkr2.accessheritage.com
+
+[docker_swarm_monitoring_endpoint]
+is2-dev-swm-mgr1.accessheritage.com
+
+[efk]
+hes-mms2-mon-dev.accessheritage.com
+
+[redis]
+hes-mms2-mon-dev.accessheritage.com
