@@ -22,8 +22,7 @@ services:
       - "3005:3000"
     environment:
       - API_BASE_URL=https://mms2-api.accessheritage.com
-      - APP_OIDC_TENANTID=1c52729b-e37a-46f3-9b7a-94d0ce8eb632
-      - APP_OIDC_CLIENTID=c8b58a10-2d1d-435d-a371-bf1059a9f6ee
+      - OIDC_AUTHORITY=https://mms2-identity.accessheritage.com
     networks: 
       - mmsnet-prod 
 

@@ -22,8 +22,7 @@ services:
       - "3004:3000"
     environment:
       - API_BASE_URL=https://mms2-api-uat.accessheritage.com
-      - APP_OIDC_TENANTID=1c52729b-e37a-46f3-9b7a-94d0ce8eb632
-      - APP_OIDC_CLIENTID=b1a7daa2-1224-4a78-b3f3-bea5e24cf53d
+      - OIDC_AUTHORITY=https://mms2-identity-uat.accessheritage.com
     networks: 
       - mmsnet-uat 
 
