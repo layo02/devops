@@ -1,0 +1,9 @@
+[stream]
+    enabled = yes
+    destination = {{ netdata_stream_aggregation_address }}
+    api key = {{ netdata_stream_id }}
+
+    timeout seconds = 60
+    buffer size bytes = 1048576
+    reconnect delay seconds = 5
+    initial clock resync iterations = 60

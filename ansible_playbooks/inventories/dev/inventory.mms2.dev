@@ -1,14 +1,14 @@
 [docker_swarm_all_nodes]
 mms2-dev-swm-mgr1.accessheritage.com
 mms2-dev-swm-mgr3.accessheritage.com
-mms2-dev-swm-wkr1
-mms2-dev-swm-wkr2
+mms2-dev-swm-wrk1.accessheritage.com
+mms2-dev-swm-wrk2.accessheritage.com
 
 [docker_swarm_monitoring_endpoint]
 mms2-dev-swm-mgr1.accessheritage.com
 
 [efk]
-hes-mms2-mon-dev.accessheritage.com
+hes-mms2-mon-dev.accessheritage.com  netdata_stream_aggregation_host="true"
 
 [redis]
-hes-mms2-mon-dev.accessheritage.com
+hes-mms2-mon-dev.accessheritage.com  netdata_stream_aggregation_host="true"

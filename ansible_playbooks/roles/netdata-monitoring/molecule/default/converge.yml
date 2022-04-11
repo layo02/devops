@@ -1,0 +1,8 @@
+---
+- name: Converge
+  become: yes
+  hosts: all
+  tasks:
+    - name: "Include netdata-monitoring"
+      include_role:
+        name: "netdata-monitoring"

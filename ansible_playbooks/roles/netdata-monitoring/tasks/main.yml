@@ -1,0 +1,126 @@
+
+- name: Get Netdata Agent Link
+  shell: 'wget -q -O- https://api.github.com/repos/netdata/netdata/releases/latest | grep "browser_download_url.*.x86_64-latest.gz" | cut -d "\"" -f 4'
+  register: netdata_download_uri
+  changed_when: false
+  delegate_to: localhost
+
+- name: Get or Update Netdata Agent app
+  get_url:
+    url: "{{ netdata_download_uri.stdout }}"
+    dest: /var/cache/netdata-agent.gz.run
+    mode: '0700'
+  register: netdata_distribution
+
+- name: Install Netdata Agent
+  command: "/var/cache/netdata-agent.gz.run --accept"
+  when: netdata_distribution is changed or
+        netdata_force_install == "true"
+
+- name: Disable Netdata Cloud integration
+  template:
+    src: netdata_nocloud_conf.jinja2
+    dest: /opt/netdata/var/lib/netdata/cloud.d/cloud.conf
+    owner: netdata
+    group: netdata
+    mode: 0650
+  when:
+    - netdata_cloud_enable == "false"
+  register: netdata_cloud_configuration
+
+- name: Enable custom Netdata registry
+  lineinfile:
+    dest: /opt/netdata/etc/netdata/netdata.conf
+    regexp: '^\t# registry to announce.*'
+    line: '\t registry to announce = {{ netdata_registry_uri }}'
+    backrefs: true
+  when:
+    - netdata_registry_enabled == "true"
+    - netdata_registry_uri != ""
+  tags:
+    - conf
+  register: netdata_registry_configuration
+
+- name: Disable custom Netdata registry
+  lineinfile:
+    dest: /opt/netdata/etc/netdata/netdata.conf
+    regexp: '.*registry to announce.*'
+    line: '\t# registry to announce = '
+    backrefs: true
+  when:
+    - netdata_registry_enabled == "false"
+  tags:
+    - conf
+    - test
+  register: netdata_registry_configuration
+
+- name: Disabling external Netdata alerts
+  template:
+    src: netdata_noalerts.jinja2
+    dest: /opt/netdata/etc/netdata/health_alarm_notify.conf
+    owner: netdata
+    group: netdata
+    mode: 0650
+  when: netdata_notifications == "false"
+  tags:
+    - alerts
+    - conf
+  register: netdata_alerts_configuration
+
+- name: Template the custom alerts configuration
+  template:
+    src: netdata_alerts.jinja2
+    dest: /opt/netdata/etc/netdata/health_alarm_notify.conf
+    owner: netdata
+    group: netdata
+    mode: 0650
+  when: netdata_notifications == "true"
+  tags:
+    - alerts
+    - conf
+  register: netdata_alerts_configuration
+
+- name: Template the custom stream-sender configuration
+  template:
+    src: netdata_stream_sender.jinja2
+    dest: /opt/netdata/etc/netdata/stream.conf
+    owner: netdata
+    group: netdata
+    mode: 0650
+  when:
+    - netdata_streaming_enable == "true"
+    - netdata_stream_aggregation_host == "false"
+  tags:
+    - conf
+  register: netdata_stream_configuration
+
+- name: Template the custom stream-aggregator configuration
+  template:
+    src: netdata_stream_aggregator.jinja2
+    dest: /opt/netdata/etc/netdata/stream.conf
+    owner: netdata
+    group: netdata
+    mode: 0650
+  when:
+    - netdata_streaming_enable == "true"
+    - netdata_stream_aggregation_host == "true"
+  tags:
+    - conf
+  register: netdata_stream_configuration
+
+- name: Restart Netdata service in case of reconfiguration
+  service:
+    name: netdata
+    state: restarted
+  when: netdata_stream_configuration.changed or
+        netdata_alerts_configuration.changed or
+        netdata_cloud_configuration.changed or
+        netdata_registry_configuration.changed
+  tags:
+    - always
+
+- name: Confirm HTTP 200 OK response from Netdata listen address
+  ansible.builtin.uri:
+    url: "http://{{ netdata_web_listen_address }}/"
+    status_code: 200
+    timeout: 30
