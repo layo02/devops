@@ -1,0 +1,19 @@
+---
+
+netdata_cloud_enable: "true"
+netdata_force_install: "false"
+netdata_notifications: "false"
+netdata_alarm_maillist: "root"
+netdata_web_listen_address: "0.0.0.0:19999"
+netdata_claim_token: "your-netdata-token"
+netdata_command: "-W set 'web' 'allow dashboard from' 'localhost' '*'"
+
+netdata_registry_enabled: "false"
+netdata_registry_uri: ""
+netdata_registry_node: "false"
+
+
+netdata_streaming_enable: "false"
+netdata_stream_id: "7d132e35-cf4a-412a-9a85-e89ff75a0b5b"
+netdata_stream_aggregation_address: ""
+netdata_stream_aggregation_host: "false"

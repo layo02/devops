@@ -1,0 +1,14 @@
+---
+
+galaxy_info:
+  role_name: netdata
+  author: anmcarrow
+  description: "Small, fast and simple role for pre-built Netdata Cloud Agent installation on Linux x86_64 distros"
+
+  license: MIT
+
+  #min_ansible_version: 1.2
+
+#  galaxy_tags: []
+
+# dependencies: []

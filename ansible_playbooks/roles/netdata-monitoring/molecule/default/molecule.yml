@@ -1,0 +1,48 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  raw_config_args:
+    - "ssh.pty = true"
+    - "vm.network :private_network, :libvirt__dhcp_enabled=> false ,:libvirt__tunnel_type => 'server', :libvirt__tunnel_port => '11111'"
+  lint:
+    name: yamllint
+
+
+platforms:
+  - name: centos7
+    box: centos/7
+    memory: 512
+    cpus: 1
+    instance_raw_config_args:
+      - "vm.network 'forwarded_port', guest: 19999, host: 29999"
+    config_options:
+      ssh.keep_alive: yes
+      ssh.remote_user: "'vagrant'"
+  - name: focal64
+    box: ubuntu/focal64
+    memory: 512
+    cpus: 1
+    instance_raw_config_args:
+      - "vm.network 'forwarded_port', guest: 19999, host: 39999"
+    config_options:
+      ssh.keep_alive: yes
+      ssh.remote_user: "'vagrant'"
+  - name: bullseye64
+    box: debian/bullseye64
+    memory: 512
+    cpus: 1
+    instance_raw_config_args:
+      - "vm.network 'forwarded_port', guest: 19999, host: 49999"
+    config_options:
+      ssh.keep_alive: yes
+      ssh.remote_user: "'vagrant'"
+
+
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+verifier:
+  name: ansible

@@ -1,0 +1,13 @@
+[stream]
+    enabled = no
+
+[{{ netdata_stream_id }}]
+    enabled = yes
+    allow from = *
+    default history = 3600
+    default memory mode = save
+
+#   health enabled by default = no
+    health enabled by default = yes
+
+    default postpone alarms on connect seconds = 60

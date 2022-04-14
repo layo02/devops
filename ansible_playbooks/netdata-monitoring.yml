@@ -1,0 +1,24 @@
+---
+
+- hosts: all
+  become: yes
+
+  vars:
+    netdata_streaming_enable: "true"
+    netdata_cloud_enable: "false"
+    netdata_stream_aggregation_address: "hes-mms2-mon-dev.accessheritage.com:19999"
+    netdata_stream_id: "7d132e35-cf4a-412a-9a85-e89ff75a0b5b"
+    netdata_notifications: "true"
+       
+  roles:
+    - { role: netdata-monitoring, tags: [ 'netdata', 'monitoring' ] }
+
+  tasks:
+    - name: Setup HES-related alerting rules
+      template:
+        src: netdata_alarm_config.jinja2
+        dest: /opt/netdata/etc/netdata/health_alarm_notify.conf
+        owner: netdata
+        group: netdata
+        mode: 0650
+       

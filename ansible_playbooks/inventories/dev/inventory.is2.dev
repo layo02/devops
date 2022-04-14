@@ -9,7 +9,7 @@ is2-dev-swm-wkr2.accessheritage.com
 is2-dev-swm-mgr1.accessheritage.com
 
 [efk]
-hes-mms2-mon-dev.accessheritage.com
+hes-mms2-mon-dev.accessheritage.com  netdata_stream_aggregation_host="true"
 
 [redis]
-hes-mms2-mon-dev.accessheritage.com
+hes-mms2-mon-dev.accessheritage.com  netdata_stream_aggregation_host="true"

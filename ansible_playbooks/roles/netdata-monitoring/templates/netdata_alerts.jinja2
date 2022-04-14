@@ -1,0 +1,32 @@
+
+SEND_SYSLOG="YES"
+DEFAULT_RECIPIENT_SYSLOG="netdata"
+
+SEND_EMAIL="YES"
+DEFAULT_RECIPIENT_EMAIL="{{ netdata_alarm_maillist }}|critical"
+
+
+# SEND_TELEGRAM="YES"
+# TELEGRAM_BOT_TOKEN=""
+# DEFAULT_RECIPIENT_TELEGRAM=""
+
+
+# SEND_MSTEAMS="YES"
+# MSTEAMS_WEBHOOK_URL=""
+# DEFAULT_RECIPIENT_MSTEAMS=""
+# MSTEAMS_ICON_DEFAULT="♡"
+# MSTEAMS_ICON_CLEAR="💚"
+# MSTEAMS_ICON_WARNING="⚠️"
+# MSTEAMS_ICON_CRITICAL="🔥"
+# MSTEAMS_COLOR_DEFAULT="0076D7"
+# MSTEAMS_COLOR_CLEAR="65A677"
+# MSTEAMS_COLOR_WARNING="FFA500"
+# MSTEAMS_COLOR_CRITICAL="D93F3C"
+
+
+role_recipients_email[sysadmin]="${DEFAULT_RECIPIENT_EMAIL}"
+role_recipients_email[domainadmin]="${DEFAULT_RECIPIENT_EMAIL}"
+role_recipients_email[dba]="${DEFAULT_RECIPIENT_EMAIL}"
+role_recipients_email[webmaster]="${DEFAULT_RECIPIENT_EMAIL}"
+role_recipients_email[proxyadmin]="${DEFAULT_RECIPIENT_EMAIL}"
+role_recipients_email[sitemgr]="${DEFAULT_RECIPIENT_EMAIL}"
