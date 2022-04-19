@@ -1,0 +1,21 @@
+
+---
+# vars file for packages
+packages:
+  - atop
+  - iotop
+  - strace
+  - fping
+  - httping
+  - tmux
+  - mosh
+  - ansible
+  - ncdu
+  - most
+  - netcat
+  - stress
+  - rsync
+  - tcpdump
+  - pigz
+  - mtr
+  - curl
